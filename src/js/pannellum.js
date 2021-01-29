@@ -1784,6 +1784,23 @@ function createHotSpot(hs) {
         span.innerHTML = escapeHTML(hs.text);
 
     var a;
+    if (hs.clickHandlerFunc) {
+        div.addEventListener('click', function(e) {
+            hs.clickHandlerFunc(e, hs.clickHandlerArgs);
+        }, 'false');
+        if (document.documentElement.style.pointerAction === '' &&
+            document.documentElement.style.touchAction === '') {
+            div.addEventListener('pointerup', function(e) {
+                hs.clickHandlerFunc(e, hs.clickHandlerArgs);
+            }, false);
+        } else {
+            div.addEventListener('touchend', function(e) {
+                hs.clickHandlerFunc(e, hs.clickHandlerArgs);
+            }, false);
+        }
+        div.className += ' pnlm-pointer';
+        span.className += ' pnlm-pointer';
+    }
     if (hs.video) {
         var video = document.createElement('video'),
             vidp = hs.video;
@@ -1850,23 +1867,6 @@ function createHotSpot(hs) {
         span.style.width = span.scrollWidth - 20 + 'px';
         span.style.marginLeft = -(span.scrollWidth - div.offsetWidth) / 2 + 'px';
         span.style.marginTop = -span.scrollHeight - 12 + 'px';
-    }
-    if (hs.clickHandlerFunc) {
-        div.addEventListener('click', function(e) {
-            hs.clickHandlerFunc(e, hs.clickHandlerArgs);
-        }, 'false');
-        if (document.documentElement.style.pointerAction === '' &&
-            document.documentElement.style.touchAction === '') {
-            div.addEventListener('pointerup', function(e) {
-                hs.clickHandlerFunc(e, hs.clickHandlerArgs);
-            }, false);
-        } else {
-            div.addEventListener('touchend', function(e) {
-                hs.clickHandlerFunc(e, hs.clickHandlerArgs);
-            }, false);
-        }
-        div.className += ' pnlm-pointer';
-        span.className += ' pnlm-pointer';
     }
     if (hs.draggable) {
         // Handle mouse by container event listeners
